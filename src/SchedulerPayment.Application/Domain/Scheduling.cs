@@ -7,21 +7,31 @@ public class Scheduling
     public Guid Id { get; private set; }
 
     public Status Status { get; private set; }
-    public DateTime Date { get; private set; }
+    public DateOnly Date { get; private set; }
 
-    private Scheduling(DateTime date)
+    private Scheduling(Guid id, Status status, DateOnly date)
+        => (Id, Status, Date) = (id, status, date);
+
+    public static Result<Scheduling> Create(DateOnly date)
+        => Create(Guid.NewGuid(), Status.Pending, date);
+
+    public static Result<Scheduling> Create(Guid id, Status status, DateOnly date)
     {
-        Id = Guid.NewGuid();
-        Status = Status.Pending;
-        Date = date;
+        if (date < DateOnly.FromDateTime(DateTime.Now))
+            return Result.Failure<Scheduling>("Date can't to be smaller that today.");
+
+        return Result.Success(new Scheduling(id, status, date));
     }
 
-    private Scheduling(Guid id, Status status, DateTime date) : this(date)
-        => (Id, Status) = (id, status);
+    public Result UpdateDate(DateOnly date)
+    {
+        if (Status == Status.Paid)
+            return Result.Failure("Scheduling is already paid.");
 
-    public static Result<Scheduling> Create(DateTime date)
-        => Result.Success(new Scheduling(date));
+        if (date < DateOnly.FromDateTime(DateTime.Now))
+            return Result.Failure("Date can't to be smaller that today.");
 
-    public static Result<Scheduling> Create(Guid id, Status status, DateTime date)
-        => Result.Success(new Scheduling(id, status, date));
+        Date = date;
+        return Result.Success();
+    }
 }
