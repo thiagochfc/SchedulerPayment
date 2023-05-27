@@ -10,7 +10,7 @@ public class SchedulingTest
     public void ShouldCreateSuccessfullyWithStatusPending()
     {
         // Arrange
-        var date = DateTimeOperation.Now();
+        var date = DateOnlyOperation.Now();
 
         // Act
         var result = Scheduling.Create(date);
@@ -25,10 +25,10 @@ public class SchedulingTest
     public void ShouldUpdateSuccessfullyDateIfStatusPending()
     {
         // Arrange
-        var date = DateTimeOperation.AddDays(1);
+        var date = DateOnlyOperation.AddDays(1);
 
         // Act
-        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Pending, DateTimeOperation.Now()).Value;
+        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Pending, DateOnlyOperation.Now()).Value;
         scheduling.UpdateDate(date);
 
         // Assert
@@ -39,8 +39,8 @@ public class SchedulingTest
     public void ShouldNotUpdateDueToStatusPaid()
     {
         // Act
-        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Paid, DateTimeOperation.Now()).Value;
-        var result = scheduling.UpdateDate(DateTimeOperation.Now());
+        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Paid, DateOnlyOperation.Now()).Value;
+        var result = scheduling.UpdateDate(DateOnlyOperation.Now());
 
         // Assert
         Assert.True(result.IsFailure);
@@ -50,8 +50,8 @@ public class SchedulingTest
     public void ShouldNotUpdateDueToDateSmallerToday()
     {
         // Act
-        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Pending, DateTimeOperation.Now()).Value;
-        var result = scheduling.UpdateDate(DateTimeOperation.SubtractDays(1));
+        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Pending, DateOnlyOperation.Now()).Value;
+        var result = scheduling.UpdateDate(DateOnlyOperation.SubtractDays(1));
 
         // Assert
         Assert.True(result.IsFailure);
@@ -61,7 +61,7 @@ public class SchedulingTest
     public void ShoudUpdateSuccessfullyDateIfEqualToday()
     {
         // Arrange
-        var date = DateTimeOperation.Now();
+        var date = DateOnlyOperation.Now();
 
         // Act
         var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Pending, date).Value;

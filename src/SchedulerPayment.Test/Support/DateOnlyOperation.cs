@@ -1,6 +1,6 @@
 ﻿namespace SchedulerPayment.Test.Support
 {
-    internal static class DateTimeOperation
+    internal static class DateOnlyOperation
     {
         internal static DateOnly Now()
             => DateOnly.FromDateTime(DateTime.Now);
