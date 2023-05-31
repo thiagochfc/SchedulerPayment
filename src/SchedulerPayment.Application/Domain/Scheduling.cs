@@ -34,4 +34,13 @@ public class Scheduling
         Date = date;
         return Result.Success();
     }
+
+    public Result Pay()
+    {
+        if (Status == Status.Paid)
+            return Result.Failure("Scheduling is already paid.");
+
+        Status = Status.Paid;
+        return Result.Success();
+    }
 }

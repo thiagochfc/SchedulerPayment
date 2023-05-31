@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Caching.Memory;
 using SchedulerPayment.Payment.Domain;
 using SchedulerPayment.Payment.UseCases.Create;
+using SchedulerPayment.Payment.UseCases.Pay;
 using SchedulerPayment.Payment.UseCases.Query;
 using SchedulerPayment.WebApi.Infrastructure;
 
@@ -17,7 +18,8 @@ builder.Services
     .AddSingleton<IMemoryCache>(provider => new MemoryCache(new MemoryCacheOptions()))
     .AddSingleton<ISchedulingStore, InMemorySchedulingStore>()
     .AddSingleton<ICreateUseCase, CreateUseCase>()
-    .AddSingleton<IQueryUseCase, QueryUseCase>();
+    .AddSingleton<IQueryUseCase, QueryUseCase>()
+    .AddSingleton<IPayUseCase, PayUseCase>();
 
 var app = builder.Build();
 

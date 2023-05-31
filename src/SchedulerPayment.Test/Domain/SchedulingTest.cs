@@ -1,6 +1,7 @@
 ﻿using SchedulerPayment.Payment.Domain;
 using SchedulerPayment.Test.Support;
 using System.Runtime.CompilerServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SchedulerPayment.Test.Domain;
 
@@ -69,5 +70,32 @@ public class SchedulingTest
 
         // Assert
         Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public void ShoudPaySuccessfully()
+    {
+        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Pending, DateOnlyOperation.Now()).Value;
+
+        // Act
+        var result = scheduling.Pay();
+
+        // Assert
+        Assert.True(result.IsSuccess);
+        Assert.Equal(Status.Paid, scheduling.Status);
+    }
+
+    [Fact]
+    public void ShoudNotPayDueToAlreadyPaid()
+    {
+        // Arrange
+        var scheduling = Scheduling.Create(Guid.NewGuid(), Status.Paid, DateOnlyOperation.Now()).Value;
+
+        // Act
+        var result = scheduling.Pay();
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Equal(Status.Paid, scheduling.Status);
     }
 }
